@@ -60,7 +60,14 @@ namespace AlphabetCipher
         public static string Cryptify(string secret, string message)
         {
             var copies = (int) Math.Ceiling((double)message.Length / (double)secret.Length);
-            var fullSecret = new String(secret, copies);
+            var fullSecret = "";
+            for (int i = 0; i < copies; i++)
+            {
+                fullSecret += secret;
+            }
+            fullSecret = fullSecret.Substring(0, message.Length);
+
+            return Replace(fullSecret, message);
         }
     }
 }
