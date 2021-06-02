@@ -4,12 +4,12 @@ using Xunit;
 
 namespace AlphabetCipherTest
 {
-    public class UnitTest1
+    public class CypherTests
     {
         [Fact]
         public void AlphabetTest()
         {
-            var result = Cipher.Alphabet();
+            var result = Cypher.Alphabet();
             var expected = "abcdefghijklmnopqrstuvwxyz";
             Assert.Equal(expected, result);
         }
@@ -17,7 +17,7 @@ namespace AlphabetCipherTest
         [Fact]
         public void AlphabetOffByOneTest()
         {
-            var result = Cipher.AlphabetShift(1);
+            var result = Cypher.AlphabetShift(1);
             var expected = "bcdefghijklmnopqrstuvwxyza";
             Assert.Equal(expected, result);
         }
@@ -25,7 +25,7 @@ namespace AlphabetCipherTest
         [Fact]
         public void AlphabetOffByTwelveTest()
         {
-            var result = Cipher.AlphabetShift(12);
+            var result = Cypher.AlphabetShift(12);
             var expected = "mnopqrstuvwxyzabcdefghijkl";
             Assert.Equal(expected, result);
         }
@@ -33,7 +33,7 @@ namespace AlphabetCipherTest
         [Fact]
         public void AlphabetChartTest()
         {
-            var result = Cipher.Chart();
+            var result = Cypher.Chart();
             var expected = @"abcdefghijklmnopqrstuvwxyz
 bcdefghijklmnopqrstuvwxyza
 cdefghijklmnopqrstuvwxyzab
@@ -64,25 +64,39 @@ zabcdefghijklmnopqrstuvwxy
             Assert.Equal(expected, result);
         }
         [Fact]
-        public void ReplaceAETest()
+        public void ReplaceEncryptAETest()
         {
-            var result = Cipher.Replace('a', 'e');
+            var result = Cypher.Encrypt('a', 'e');
             var expected = "e";
             Assert.Equal(expected, result);
         }
         
         [Fact]
-        public void ReplaceTWTest()
+        public void ReplaceEncryptTWTest()
         {
-            var result = Cipher.Replace('t', 'w');
+            var result = Cypher.Encrypt('t', 'w');
             var expected = "p";
             Assert.Equal(expected, result);
         }
-        
+        [Fact]
+        public void ReplaceDecryptAETest()
+        {
+            var result = Cypher.Encrypt('a', 'e');
+            var expected = "e";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void ReplaceDecryptTWTest()
+        {
+            var result = Cypher.Decrypt('t', 'p');
+            var expected = "w";
+            Assert.Equal(expected, result);
+        }
         [Fact]
         public void ReplaceAETWTest()
         {
-            var result = Cipher.Replace("at", "ew");
+            var result = Cypher.Encrypt("at", "ew");
             var expected = "ep";
             Assert.Equal(expected, result);
         }
@@ -92,18 +106,28 @@ zabcdefghijklmnopqrstuvwxy
         {
             var message = "meetmebythetree";
             var secret = "sconessconessco";
-            var result = Cipher.Replace(secret, message);
+            var result = Cypher.Encrypt(secret, message);
             var expected = "egsgqwtahuiljgs";
             Assert.Equal(expected, result);
         }
 
         [Fact]
-        public void CryptifyTest()
+        public void CryptifyEncryptTest()
         {
             var message = "meetmebythetree";
             var secret = "scones";
-            var result = Cipher.Cryptify(secret, message);
+            var result = Cypher.Encrypt(secret, message);
             var expected = "egsgqwtahuiljgs";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void CryptifyDecryptTest()
+        {
+            var message = "egsgqwtahuiljgs";
+            var secret = "scones";
+            var result = Cypher.Decrypt(secret, message);
+            var expected = "meetmebythetree"; 
             Assert.Equal(expected, result);
         }
     }

@@ -1,13 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AlphabetCipher
 {
-    public class Cipher
+    public class Cypher
     {
+        public static string Crypto(bool encrypt, string passphrase, string message)
+        {
+            return encrypt ? Encrypt(passphrase, message) : Decrypt(passphrase, message);
+        }
+
         public static string Alphabet()
         {
             return "abcdefghijklmnopqrstuvwxyz";
@@ -20,54 +23,79 @@ namespace AlphabetCipher
 
         public static string Chart()
         {
-            var count = 0;
             var sb = new StringBuilder();
-
-            foreach (var item in Alphabet())
+            for (int i = 0; i < Alphabet().Length; i++)
             {
-                sb.AppendLine(AlphabetShift(count));
-                count++;
+                sb.AppendLine(AlphabetShift(i));
             }
-
             return sb.ToString();
         }
 
-        public static string Replace(char row, char column)
-        {
-            var rowNum = (int)row - 97;
-            var columnNum = (int)column - 97;
-            var alphabetRow = AlphabetShift(rowNum);
-            var result = alphabetRow.Substring(columnNum, 1);
 
-            return result;
+        public static string Decrypt(string secret, string message)
+        {
+            string fullSecret = FullSecret(secret, message);
+
+            return WalkThrough(fullSecret, message, Decrypt);
         }
 
-        public static string Replace(string lookup, string text)
+        public static string Decrypt(char row, char column)
         {
-            var count = 0;
+            var alphabet = Alphabet();
+            var rowNum = alphabet.IndexOf(row);
+            var columnNum = alphabet.IndexOf(column);
+
+            int alphaLength = alphabet.Length;
+            var tranposition = columnNum - rowNum;
+
+            var index = tranposition <= 0 ? tranposition + alphaLength : tranposition;
+
+            return alphabet.Substring(index, 1);
+        }
+
+        public static string Encrypt(string secret, string message)
+        {
+            string fullSecret = FullSecret(secret, message);
+
+            return WalkThrough(fullSecret, message, Encrypt);
+        }
+
+        public static string Encrypt(char row, char column)
+        {
+            var alphabet = Alphabet();
+            var rowNum = alphabet.IndexOf(row);
+            var columnNum = alphabet.IndexOf(column);
+
+            int alphaLength = alphabet.Length;
+            var tranposition = columnNum + rowNum;
+
+            var index = tranposition >= alphaLength ? tranposition - alphaLength : tranposition;
+
+            return alphabet.Substring(index, 1);
+        }
+
+        public static string WalkThrough(string passphrase, string text, Func<char, char, string> apply)
+        {
             var sb = new StringBuilder();
-
-            foreach (var row in lookup)
+            for (int i = 0; i < text.Length; i++)
             {
-                var col = text.Substring(count, 1).FirstOrDefault();
-                sb.Append(Replace(row, col));
-                count++;
+                var row = passphrase.Substring(i, 1).FirstOrDefault();
+                var col = text.Substring(i, 1).FirstOrDefault();
+                sb.Append(apply(row, col));
             }
-
             return sb.ToString();
         }
 
-        public static string Cryptify(string secret, string message)
+        private static string FullSecret(string secret, string message)
         {
-            var copies = (int) Math.Ceiling((double)message.Length / (double)secret.Length);
+            var copies = (int)Math.Ceiling((double)message.Length / (double)secret.Length);
             var fullSecret = "";
             for (int i = 0; i < copies; i++)
             {
                 fullSecret += secret;
             }
             fullSecret = fullSecret.Substring(0, message.Length);
-
-            return Replace(fullSecret, message);
+            return fullSecret;
         }
     }
 }
