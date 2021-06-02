@@ -1,2 +1,5 @@
 AlphabetCipher/obj/
 AlphabetCipherTest/obj/
+/.vs
+/AlphabetCipher/bin/Debug/net5.0
+/AlphabetCipherTest/bin/Debug/net5.0
