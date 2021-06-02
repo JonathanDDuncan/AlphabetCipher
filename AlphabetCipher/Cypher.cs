@@ -10,6 +10,11 @@ namespace AlphabetCipher
             return encrypt ? Encrypt(alfabet, passphrase, message) : Decrypt(alfabet, passphrase, message);
         }
 
+        public static string Ascii()
+        {
+            return Enumerable.Range(0, 256).Select(x => (char)x).Aggregate("", (accm, x) => accm + x);
+        }
+
         public static string Alphabet()
         {
             return "abcdefghijklmnopqrstuvwxyz";
