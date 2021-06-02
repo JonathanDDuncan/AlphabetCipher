@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 
 namespace AlphabetCipher
 {
@@ -18,84 +17,64 @@ namespace AlphabetCipher
 
         public static string AlphabetShift(int shiftBy)
         {
-            return Alphabet().Substring(shiftBy) + Alphabet().Substring(0, shiftBy);
+            return Alphabet()[shiftBy..] + Alphabet()[0..shiftBy];
         }
 
         public static string Chart()
         {
-            var sb = new StringBuilder();
-            for (int i = 0; i < Alphabet().Length; i++)
-            {
-                sb.AppendLine(AlphabetShift(i));
-            }
-            return sb.ToString();
+            return Alphabet()
+                  .Select((x, i) => AlphabetShift(i) + Environment.NewLine)
+                  .Aggregate("", (accm, x) => accm + x);
         }
 
 
         public static string Decrypt(string secret, string message)
         {
-            string fullSecret = FullSecret(secret, message);
-
-            return WalkThrough(fullSecret, message, Decrypt);
+            return Fold(FullSecret(secret, message), message, Decrypt);
         }
 
         public static string Decrypt(char row, char column)
         {
             var alphabet = Alphabet();
-            var rowNum = alphabet.IndexOf(row);
-            var columnNum = alphabet.IndexOf(column);
 
-            int alphaLength = alphabet.Length;
-            var tranposition = columnNum - rowNum;
+            var tranposition = alphabet.IndexOf(column) - alphabet.IndexOf(row);
 
-            var index = tranposition <= 0 ? tranposition + alphaLength : tranposition;
+            var index = tranposition <= 0 ? tranposition + alphabet.Length : tranposition;
 
             return alphabet.Substring(index, 1);
         }
 
         public static string Encrypt(string secret, string message)
         {
-            string fullSecret = FullSecret(secret, message);
-
-            return WalkThrough(fullSecret, message, Encrypt);
+            return Fold(FullSecret(secret, message), message, Encrypt);
         }
 
         public static string Encrypt(char row, char column)
         {
             var alphabet = Alphabet();
-            var rowNum = alphabet.IndexOf(row);
-            var columnNum = alphabet.IndexOf(column);
 
             int alphaLength = alphabet.Length;
-            var tranposition = columnNum + rowNum;
+            var tranposition = alphabet.IndexOf(column) + alphabet.IndexOf(row);
 
             var index = tranposition >= alphaLength ? tranposition - alphaLength : tranposition;
 
             return alphabet.Substring(index, 1);
         }
 
-        public static string WalkThrough(string passphrase, string text, Func<char, char, string> apply)
+        public static string Fold(string passphrase, string text, Func<char, char, string> apply)
         {
-            var sb = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
-            {
-                var row = passphrase.Substring(i, 1).FirstOrDefault();
-                var col = text.Substring(i, 1).FirstOrDefault();
-                sb.Append(apply(row, col));
-            }
-            return sb.ToString();
+            return passphrase.Zip(text)
+                .Select(x => apply(x.First, x.Second))
+                .Aggregate("", (accm, x) => accm + x);
         }
 
         private static string FullSecret(string secret, string message)
         {
-            var copies = (int)Math.Ceiling((double)message.Length / (double)secret.Length);
-            var fullSecret = "";
-            for (int i = 0; i < copies; i++)
-            {
-                fullSecret += secret;
-            }
-            fullSecret = fullSecret.Substring(0, message.Length);
-            return fullSecret;
+            var copiesNeeded = (int)Math.Ceiling(message.Length / (double)secret.Length);
+
+            return Enumerable.Range(0, copiesNeeded)
+                .Aggregate("", (accm, x) => accm + secret)
+                .Substring(0, message.Length);
         }
     }
 }
