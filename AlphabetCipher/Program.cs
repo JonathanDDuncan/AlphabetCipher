@@ -15,7 +15,7 @@ namespace AlphabetCipher
                 && !string.IsNullOrEmpty(passphrase)
                 && !string.IsNullOrEmpty(message))
             {
-                Console.WriteLine(Cypher.Crypto(encrypt, passphrase, message));
+                Console.WriteLine(Cypher.Crypto( encrypt, Cypher.Alphabet(), passphrase, message));
             }
             else
             {
