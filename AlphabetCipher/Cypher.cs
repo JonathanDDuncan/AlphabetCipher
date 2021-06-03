@@ -48,8 +48,8 @@ namespace AlphabetCipher
             var tranposition = alphabet.IndexOf(column) - alphabet.IndexOf(row);
 
             var index = tranposition <= 0 ? tranposition + alphabet.Length : tranposition;
-
-            return alphabet.Substring(index, 1);
+            var index1 = index >= alphabet.Length  ? index - alphabet.Length : index;
+            return alphabet.Substring(index1, 1);
         }
 
         public static string Encrypt(string alphabet, string secret, string message)
@@ -69,6 +69,7 @@ namespace AlphabetCipher
 
         public static string Fold(string alphabet, string passphrase, string text, Func<string, char, char, string> apply)
         {
+        
             return passphrase.Zip(text)
                 .Select(x => apply(alphabet, x.First, x.Second))
                 .Aggregate("", (accm, x) => accm + x);

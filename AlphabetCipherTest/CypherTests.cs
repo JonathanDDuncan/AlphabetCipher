@@ -130,5 +130,25 @@ zabcdefghijklmnopqrstuvwxy
             var expected = "meetmebythetree";
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void CryptifyEncryptSpanishTest()
+        {
+            var message = "esteesunmensajesecretonolodivulguesanadie";
+            var secret = "holausted";
+            var result = Cypher.Encrypt(Cypher.Alphabet(), secret, message);
+            var expected = "lgeeyknrplbdadwlifyseohgesgpjflamxwduooiy";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void CryptifyDecryptSpanishTest()
+        {
+            var message = "lgeeyknrplbdadwlifyseohgesgpjflamxwduooiy";
+            var secret = "holausted";
+            var result = Cypher.Decrypt(Cypher.Alphabet(), secret, message);
+            var expected = "esteesunmensajesecretonolodivulguesanadie";
+            Assert.Equal(expected, result);
+        }
     }
 }
