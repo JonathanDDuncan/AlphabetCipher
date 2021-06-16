@@ -43,13 +43,12 @@ namespace AlphabetCipher
             return Fold(alphabet, FullSecret(secret, message.Length), message, Decrypt);
         }
 
-        public static string Decrypt(string alphabet, char row, char column)
+        public static char Decrypt(string alphabet, char row, char column)
         {
-            var tranposition = alphabet.IndexOf(column) - alphabet.IndexOf(row);
-
-            var index = tranposition <= 0 ? tranposition + alphabet.Length : tranposition;
-            var index1 = index >= alphabet.Length  ? index - alphabet.Length : index;
-            return alphabet.Substring(index1, 1);
+            var alphabetShifted = AlphabetShift(alphabet, alphabet.IndexOf(row));
+            var index = alphabetShifted.IndexOf(column);
+            var result = alphabet.ElementAt(index);
+            return result;
         }
 
         public static string Encrypt(string alphabet, string secret, string message)
@@ -57,19 +56,18 @@ namespace AlphabetCipher
             return Fold(alphabet, FullSecret(secret, message.Length), message, Encrypt);
         }
 
-        public static string Encrypt(string alphabet, char row, char column)
+        public static char Encrypt(string alphabet, char row, char column)
         {
             int alphaLength = alphabet.Length;
             var tranposition = alphabet.IndexOf(column) + alphabet.IndexOf(row);
 
             var index = tranposition >= alphaLength ? tranposition - alphaLength : tranposition;
 
-            return alphabet.Substring(index, 1);
+            return alphabet.Substring(index, 1).First();
         }
 
-        public static string Fold(string alphabet, string passphrase, string text, Func<string, char, char, string> apply)
+        public static string Fold(string alphabet, string passphrase, string text, Func<string, char, char, char> apply)
         {
-        
             return passphrase.Zip(text)
                 .Select(x => apply(alphabet, x.First, x.Second))
                 .Aggregate("", (accm, x) => accm + x);

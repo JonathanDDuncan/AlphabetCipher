@@ -67,7 +67,7 @@ zabcdefghijklmnopqrstuvwxy
         public void ReplaceEncryptAETest()
         {
             var result = Cypher.Encrypt(Cypher.Alphabet(), 'a', 'e');
-            var expected = "e";
+            var expected = 'e';
             Assert.Equal(expected, result);
         }
 
@@ -75,14 +75,14 @@ zabcdefghijklmnopqrstuvwxy
         public void ReplaceEncryptTWTest()
         {
             var result = Cypher.Encrypt(Cypher.Alphabet(), 't', 'w');
-            var expected = "p";
+            var expected = 'p';
             Assert.Equal(expected, result);
         }
         [Fact]
         public void ReplaceDecryptAETest()
         {
             var result = Cypher.Encrypt(Cypher.Alphabet(), 'a', 'e');
-            var expected = "e";
+            var expected = 'e';
             Assert.Equal(expected, result);
         }
 
@@ -90,7 +90,7 @@ zabcdefghijklmnopqrstuvwxy
         public void ReplaceDecryptTWTest()
         {
             var result = Cypher.Decrypt(Cypher.Alphabet(), 't', 'p');
-            var expected = "w";
+            var expected = 'w';
             Assert.Equal(expected, result);
         }
         [Fact]
